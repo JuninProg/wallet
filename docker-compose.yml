@@ -1,0 +1,49 @@
+version: "3.2"
+services:
+  auth_ms:
+    platform: linux/x86_64
+    build: ./auth-ms
+    restart: always
+    hostname: auth_ms
+    env_file:
+      - ./auth-ms/.env
+    networks:
+      - wallet_net
+    links:
+      - postgres
+    depends_on:
+      - postgres
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: wallet_rabbit
+    hostname: rabbitmq
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+      - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+    networks:
+      - wallet_net
+
+  postgres:
+    env_file:
+      - .env
+    restart: always
+    hostname: db
+    container_name: wallet_pg
+    image: postgres
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./migrations:/docker-entrypoint-initdb.d
+    networks:
+      - wallet_net
+
+networks:
+  wallet_net:
+    driver: bridge
