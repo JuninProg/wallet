@@ -14,7 +14,8 @@ import { AuthController } from './auth.controller';
       useFactory: (configService: ConfigService) => {
         return ClientProxyFactory.create({
           options: {
-            url: configService.get('auth_ms')
+            host: configService.get('auth_ms_host'),
+            port: configService.get('auth_ms_port'),
           },
         });
       },

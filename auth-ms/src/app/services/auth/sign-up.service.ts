@@ -1,10 +1,10 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { User } from 'src/domain/entities/user';
 import { UserRepository } from 'src/infra/database/repositories/user-repository';
-import { SignUpRequestDTO } from 'src/interfaces/http/auth/dtos';
+import { SignUpDTO } from 'src/interface/auth/dtos';
 
 @Injectable()
 export class SignUpService {
@@ -17,13 +17,17 @@ export class SignUpService {
   @Inject(JwtService)
   private readonly jwt: JwtService;
 
-  async execute(data: SignUpRequestDTO) {
+  async execute(data: SignUpDTO) {
     if (data.password !== data.confirmPassword)
       throw new Error('Password and confirmPassword must be equals');
 
     const userFound = await this.repository.findByEmail(data.email);
 
-    if (userFound) throw new Error('User already exists');
+    if (userFound)
+      throw new HttpException(
+        'User already exists',
+        HttpStatus.UNPROCESSABLE_ENTITY,
+      );
 
     const salt = Number(this.configService.get('salt'));
 

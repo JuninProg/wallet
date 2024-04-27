@@ -1,35 +1,39 @@
-// import {
-//   CanActivate,
-//   ExecutionContext,
-//   HttpStatus,
-//   Inject,
-//   UnauthorizedException,
-// } from '@nestjs/common';
-// import { AuthService } from './auth.service';
-// import { Request } from 'express';
+import {
+  CanActivate,
+  ExecutionContext,
+  Inject,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { Request } from 'express';
+import { ClientProxy } from '@nestjs/microservices';
+import { firstValueFrom } from 'rxjs';
 
-// export class AuthGuard implements CanActivate {
-//   @Inject(AuthService)
-//   public readonly service: AuthService;
+@Injectable()
+export class AuthGuard implements CanActivate {
+  constructor(@Inject('AUTH_MS') private client: ClientProxy) {}
 
-//   public async canActivate(
-//     context: ExecutionContext,
-//   ): Promise<boolean> | never {
-//     const req: Request & { user: string } = context.switchToHttp().getRequest();
-//     const authorization = req.cookies['token'];
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    const request = context.switchToHttp().getRequest();
+    const token = this.extractTokenFromHeader(request);
 
-//     if (!authorization) {
-//       throw new UnauthorizedException();
-//     }
+    if (!token) {
+      throw new UnauthorizedException();
+    }
 
-//     const { userId, status } = await this.service.validation(authorization);
+    const { data, status, error } = await firstValueFrom(
+      this.client.send({ cmd: 'verify_token' }, { token }),
+    );
 
-//     if (status !== HttpStatus.OK) {
-//       throw new UnauthorizedException();
-//     }
+    if (status !== 200) throw new UnauthorizedException(error);
 
-//     req.user = userId;
+    request['user'] = data;
 
-//     return true;
-//   }
-// }
+    return true;
+  }
+
+  private extractTokenFromHeader(request: Request): string | undefined {
+    const [type, token] = request.headers.authorization?.split(' ') ?? [];
+    return type === 'Bearer' ? token : undefined;
+  }
+}
