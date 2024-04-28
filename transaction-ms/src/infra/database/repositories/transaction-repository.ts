@@ -22,4 +22,42 @@ export class TransactionRepository {
         TransactionOperation[transactionCreated.operation.toUpperCase()],
     });
   }
+
+  async findByOriginId(originId: string): Promise<Transaction | null> {
+    const transaction = await this.db.transaction.findFirst({
+      where: { originId },
+    });
+
+    if (!transaction) return null;
+
+    return new Transaction({
+      ...transaction,
+      operation: TransactionOperation[transaction.operation.toUpperCase()],
+    });
+  }
+
+  async findById(id: string): Promise<Transaction | null> {
+    const transaction = await this.db.transaction.findFirst({
+      where: { id },
+    });
+
+    if (!transaction) return null;
+
+    return new Transaction({
+      ...transaction,
+      operation: TransactionOperation[transaction.operation.toUpperCase()],
+    });
+  }
+
+  async findUserTransactionsWithParent(userId: string) {
+    const transactions = await this.db.transaction.findMany({
+      where: {
+        userId: userId,
+      },
+      include: {
+        parentTransaction: true,
+      },
+    });
+    return transactions;
+  }
 }

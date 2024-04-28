@@ -5,7 +5,6 @@ export class CreateTransactionRequestDTO {
     enum: ['deposit', 'withdraw', 'purchase', 'reversal', 'cancel'],
     example: 'deposit',
     description: 'For which operation the transaction must be created',
-    type: 'string',
     required: true,
   })
   public readonly operation: string;

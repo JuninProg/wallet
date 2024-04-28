@@ -16,7 +16,7 @@ import { SignInRequestDTO, SignUpRequestDTO } from './auth.dto';
 import { AuthGuard } from './auth.guard';
 
 @ApiTags('Authentication MS')
-@Controller('auth')
+@Controller()
 export class AuthController {
   constructor(@Inject('AUTH_MS') private client: ClientProxy) {}
 

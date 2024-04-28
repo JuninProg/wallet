@@ -29,3 +29,9 @@ export class CreateTransactionDTO {
   @IsOptional()
   public readonly parentTransactionId: string;
 }
+
+export class GetBalanceDTO {
+  @IsUUID()
+  @IsNotEmpty()
+  public readonly userId: string;
+}
