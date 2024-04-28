@@ -6,6 +6,7 @@ import { UserRepository } from 'src/infra/database/repositories/user-repository'
 import { AuthController } from 'src/interface/auth/controller';
 import { SignUpService } from '../services/auth/sign-up.service';
 import { SignInService } from '../services/auth/sign-in.service';
+import { VerifyTokenService } from '../services/auth/verify-token.service';
 
 @Module({
   imports: [
@@ -20,6 +21,12 @@ import { SignInService } from '../services/auth/sign-in.service';
     }),
   ],
   controllers: [AuthController],
-  providers: [SignUpService, SignInService, UserRepository, PrismaConnector],
+  providers: [
+    VerifyTokenService,
+    SignUpService,
+    SignInService,
+    UserRepository,
+    PrismaConnector,
+  ],
 })
 export class AuthModule {}

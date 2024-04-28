@@ -1,0 +1,38 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Operation {
+  DEPOSIT  @map("deposit")
+  WITHDRAW @map("withdraw")
+  REVERSAL @map("reversal")
+  PURCHASE @map("purchase")
+  CANCEL   @map("cancel")
+}
+
+model Transaction {
+  id        String    @id() @default(uuid()) @db.Uuid()
+  userId    String    @map("user_id") @db.Uuid()
+  operation Operation
+  amount    Int
+  originId  String    @unique
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  parentTransactionId String?      @unique @map("parent_transaction_id") @db.Uuid()
+  parentTransaction   Transaction? @relation("fk_transaction_parent_transaction", fields: [parentTransactionId], references: [id])
+
+  transaction Transaction? @relation("fk_transaction_parent_transaction")
+
+  @@map("transactions")
+}

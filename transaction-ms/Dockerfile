@@ -7,6 +7,6 @@ RUN npm install
 
 RUN npx prisma generate
 
-EXPOSE 5001
+EXPOSE 5002
 
 CMD npm run migrate:db && npm run build && npm run start:prod

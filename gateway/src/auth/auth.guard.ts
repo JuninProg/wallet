@@ -6,24 +6,24 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Request } from 'express';
-import { ClientProxy } from '@nestjs/microservices';
-import { firstValueFrom } from 'rxjs';
+import { AuthService } from './auth.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(@Inject('AUTH_MS') private client: ClientProxy) {}
+  @Inject(AuthService)
+  public readonly service: AuthService;
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
-    const token = this.extractTokenFromHeader(request);
+    const token =
+      this.extractTokenFromHeader(request) ||
+      this.extractTokenFromCookies(request);
 
     if (!token) {
       throw new UnauthorizedException();
     }
 
-    const { data, status, error } = await firstValueFrom(
-      this.client.send({ cmd: 'verify_token' }, { token }),
-    );
+    const { data, status, error } = await this.service.verifyToken(token);
 
     if (status !== 200) throw new UnauthorizedException(error);
 
@@ -35,5 +35,9 @@ export class AuthGuard implements CanActivate {
   private extractTokenFromHeader(request: Request): string | undefined {
     const [type, token] = request.headers.authorization?.split(' ') ?? [];
     return type === 'Bearer' ? token : undefined;
+  }
+
+  private extractTokenFromCookies(request: Request): string | undefined {
+    return request.cookies['token'];
   }
 }
