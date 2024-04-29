@@ -19,7 +19,10 @@ export class SignUpService {
 
   async execute(data: SignUpDTO) {
     if (data.password !== data.confirmPassword)
-      throw new Error('Password and confirmPassword must be equals');
+      throw new HttpException(
+        'Password and confirmPassword must be equals',
+        HttpStatus.BAD_REQUEST,
+      );
 
     const userFound = await this.repository.findByEmail(data.email);
 

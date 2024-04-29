@@ -8,7 +8,9 @@ export class TransactionRepository {
   @Inject(PrismaConnector)
   private readonly db: PrismaConnector;
 
-  async create(transaction: Transaction): Promise<Transaction> {
+  async create(
+    transaction: Omit<Transaction, 'parentTransaction'>,
+  ): Promise<Transaction> {
     const transactionCreated = await this.db.transaction.create({
       data: {
         ...transaction,
@@ -58,6 +60,21 @@ export class TransactionRepository {
         parentTransaction: true,
       },
     });
-    return transactions;
+    return transactions.map(
+      (transaction) =>
+        new Transaction({
+          ...transaction,
+          operation: TransactionOperation[transaction.operation.toUpperCase()],
+          parentTransaction: transaction.parentTransaction
+            ? new Transaction({
+                ...transaction.parentTransaction,
+                operation:
+                  TransactionOperation[
+                    transaction.parentTransaction.operation.toUpperCase()
+                  ],
+              })
+            : null,
+        }),
+    );
   }
 }

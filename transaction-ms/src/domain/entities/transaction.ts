@@ -7,6 +7,7 @@ interface TransactionProps {
   amount: number;
   originId: string;
   parentTransactionId?: string;
+  parentTransaction?: Transaction;
   createdAt: Date;
 }
 
@@ -18,6 +19,7 @@ export class Transaction {
   amount: number;
   originId: string;
   parentTransactionId?: string;
+  parentTransaction?: Transaction;
 
   createdAt: Date;
 
