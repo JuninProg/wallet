@@ -1,15 +1,11 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { AuthModule } from './auth/auth.module';
 import { env } from './config/environment';
-import { TransactionModule } from './transaction/transaction.module';
-import { RelatoryModule } from './relatory/relatory.module';
+import { StatementModule } from './app/modules/statement.module';
 
 @Module({
   imports: [
-    AuthModule,
-    TransactionModule,
-    RelatoryModule,
+    StatementModule,
     ConfigModule.forRoot({ isGlobal: true, load: [env] }),
   ],
 })

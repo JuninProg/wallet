@@ -5,6 +5,6 @@ export const env = () => ({
   rabbitmqUrl: process.env.RABBITMQ_URL || 'amqp://localhost:5672',
   rabbitmqRelatoryQueue:
     process.env.RABBITMQ_RELATORY_QUEUE || 'relatory_queue',
-  rabbitmqTransactionQueue:
-    process.env.RABBITMQ_TRANSACTION_QUEUE || 'transaction_queue',
+  transaction_ms_port: process.env.TRANSACTION_MS_PORT || '5002',
+  transaction_ms_host: process.env.TRANSACTION_MS_HOST || 'localhost',
 });

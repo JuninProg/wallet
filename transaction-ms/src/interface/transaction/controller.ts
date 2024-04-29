@@ -1,5 +1,11 @@
 import { Controller, HttpStatus, Inject } from '@nestjs/common';
-import { MessagePattern } from '@nestjs/microservices';
+import {
+  Ctx,
+  EventPattern,
+  MessagePattern,
+  Payload,
+  RmqContext,
+} from '@nestjs/microservices';
 import { CreateTransactionDTO, GetBalanceDTO } from './dtos';
 import { CreateTransactionService } from 'src/app/services/transaction/create-transaction.service';
 import { GetBalanceService } from 'src/app/services/balance/get-balance.service';
@@ -30,5 +36,23 @@ export class TransactionController {
       status: HttpStatus.OK,
       data: response,
     };
+  }
+
+  @EventPattern('transaction_requested')
+  async transactionRequested(
+    @Payload() data: CreateTransactionDTO,
+    @Ctx() context: RmqContext,
+  ) {
+    console.log(`transaction_requested: ${JSON.stringify(data)}`);
+    const channel = context.getChannelRef();
+    const message = context.getMessage();
+
+    try {
+      await this.createTransactionService.execute(data);
+    } catch (error) {
+      console.error(error);
+    }
+
+    channel.ack(message);
   }
 }

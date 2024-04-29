@@ -15,7 +15,7 @@ async function bootstrap() {
     transport: Transport.RMQ,
     options: {
       urls: [ENV.rabbitmqUrl],
-      queue: ENV.rabbitmqTransactionQueue,
+      queue: ENV.rabbitmqRelatoryQueue,
       prefetchCount: 1,
       noAck: false,
     },

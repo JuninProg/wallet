@@ -1,7 +1,7 @@
 {
-  "name": "transaction-ms",
+  "name": "relatory-ms",
   "version": "1.0.0",
-  "description": "Transaction MS",
+  "description": "Relatory MS",
   "author": "JuninProg",
   "private": true,
   "license": "MIT",
@@ -27,12 +27,13 @@
     "@nestjs/microservices": "^10.3.8",
     "@nestjs/platform-express": "^10.3.8",
     "@prisma/client": "^5.13.0",
-    "amqp-connection-manager": "^4.1.14",
-    "amqplib": "^0.10.4",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
     "dotenv": "^16.4.5",
-    "pg": "^8.11.5"
+    "pg": "^8.11.5",
+    "rxjs": "7.8.1",
+    "amqp-connection-manager": "^4.1.14",
+    "amqplib": "^0.10.4"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.3.2",

@@ -8,6 +8,7 @@ import { CreateWithdrawStrategy } from 'src/domain/strategies/create-transaction
 import { CreatePurchaseStrategy } from 'src/domain/strategies/create-transaction/create-purchase.strategy';
 import { CreateReversalStrategy } from 'src/domain/strategies/create-transaction/create-reversal.strategy';
 import { CreateCancelStrategy } from 'src/domain/strategies/create-transaction/create-cancel.strategy';
+import { ClientProxy, RmqRecordBuilder } from '@nestjs/microservices';
 
 export interface CreateTransactionStrategy {
   execute(data: CreateTransactionDTO): Promise<Transaction> | Transaction;
@@ -15,6 +16,9 @@ export interface CreateTransactionStrategy {
 
 @Injectable()
 export class CreateTransactionService {
+  @Inject('rabbitmq_module')
+  private readonly amqpClient: ClientProxy;
+
   @Inject(TransactionRepository)
   private readonly repository: TransactionRepository;
 
@@ -70,6 +74,17 @@ export class CreateTransactionService {
 
     const transaction = await strategy.execute(data);
 
-    return this.repository.create(transaction);
+    const transactionCreated = await this.repository.create(transaction);
+
+    const message = new RmqRecordBuilder({
+      userId: transactionCreated.userId,
+      transactionId: transactionCreated.id,
+      operation: transactionCreated.operation,
+      amount: transactionCreated.amount,
+    }).build();
+
+    this.amqpClient.emit('transaction_created', message);
+
+    return transactionCreated;
   }
 }
