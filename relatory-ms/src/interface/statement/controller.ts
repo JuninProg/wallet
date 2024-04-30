@@ -28,11 +28,11 @@ export class StatementController {
 
     try {
       await this.createStatementService.execute(data);
+      channel.ack(message);
     } catch (error) {
       console.error(error);
+      channel.reject(message, false);
     }
-
-    channel.ack(message);
   }
 
   @MessagePattern({ cmd: 'get_statements' })

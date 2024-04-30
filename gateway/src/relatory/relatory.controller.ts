@@ -15,7 +15,7 @@ export class RelatoryController {
   @UseGuards(AuthGuard)
   @ApiResponse({ status: 201, description: 'Statement generated' })
   @ApiResponse({ status: 400, description: 'Invalid body' })
-  async signUp(
+  async getStatements(
     @Req() request: Request & { user: { id: string } },
     @Res({ passthrough: true }) response: Response,
   ) {

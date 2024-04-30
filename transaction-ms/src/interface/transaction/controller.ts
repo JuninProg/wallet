@@ -19,7 +19,7 @@ export class TransactionController {
   private readonly getBalanceService: GetBalanceService;
 
   @MessagePattern({ cmd: 'create_transaction' })
-  async signUp(payload: CreateTransactionDTO) {
+  async createTransaction(payload: CreateTransactionDTO) {
     const response = await this.createTransactionService.execute(payload);
 
     return {
@@ -49,10 +49,10 @@ export class TransactionController {
 
     try {
       await this.createTransactionService.execute(data);
+      channel.ack(message);
     } catch (error) {
       console.error(error);
+      channel.reject(message, false);
     }
-
-    channel.ack(message);
   }
 }

@@ -26,7 +26,7 @@ export class TransactionController {
   @ApiBody({ type: CreateTransactionRequestDTO })
   @ApiResponse({ status: 201, description: 'Transaction created' })
   @ApiResponse({ status: 400, description: 'Invalid body' })
-  async signUp(
+  async createTransaction(
     @Body() body: CreateTransactionRequestDTO,
     @Req() request: Request & { user: { id: string } },
     @Res({ passthrough: true }) response: Response,

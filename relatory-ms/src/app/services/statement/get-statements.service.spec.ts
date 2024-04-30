@@ -1,9 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { GetStatementsService } from './get-statements.service';
 import { StatementRepository } from 'src/infra/database/repositories/statement-repository';
-import {
-  GetStatementsDTO,
-} from 'src/interface/statement/dtos';
+import { GetStatementsDTO } from 'src/interface/statement/dtos';
 
 describe('GetStatementsService', () => {
   let getStatementsService: GetStatementsService, getAll: jest.Func;
