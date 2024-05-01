@@ -5,10 +5,10 @@ import { Response } from 'express';
 import { firstValueFrom } from 'rxjs';
 import { AuthGuard } from 'src/auth/auth.guard';
 
-@ApiTags('Relatory MS')
+@ApiTags('Report MS')
 @Controller()
-export class RelatoryController {
-  constructor(@Inject('RELATORY_MS') private client: ClientProxy) {}
+export class ReportController {
+  constructor(@Inject('REPORT_MS') private client: ClientProxy) {}
 
   @Get('statement')
   @ApiCookieAuth()

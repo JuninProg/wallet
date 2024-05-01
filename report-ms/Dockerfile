@@ -1,7 +1,7 @@
 FROM node:18.18.1
-RUN mkdir -p /app/relatory-ms
-WORKDIR /app/relatory-ms
-ADD . /app/relatory-ms
+RUN mkdir -p /app/report-ms
+WORKDIR /app/report-ms
+ADD . /app/report-ms
 
 RUN npm install
 

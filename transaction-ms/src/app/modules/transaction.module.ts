@@ -23,7 +23,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
           transport: Transport.RMQ,
           options: {
             urls: [configService.get<string>('rabbitmqUrl')],
-            queue: configService.get<string>('rabbitmqRelatoryQueue'),
+            queue: configService.get<string>('rabbitmqReportQueue'),
           },
         }),
         inject: [ConfigService],

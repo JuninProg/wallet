@@ -3,8 +3,7 @@ export const env = () => ({
   host: process.env.HOST || 'localhost',
   port: process.env.PORT || '5002',
   rabbitmqUrl: process.env.RABBITMQ_URL || 'amqp://localhost:5672',
-  rabbitmqRelatoryQueue:
-    process.env.RABBITMQ_RELATORY_QUEUE || 'relatory_queue',
+  rabbitmqReportQueue: process.env.RABBITMQ_REPORT_QUEUE || 'report_queue',
   rabbitmqTransactionQueue:
     process.env.RABBITMQ_TRANSACTION_QUEUE || 'transaction_queue',
 });
