@@ -4,7 +4,7 @@ import { StatementRepository } from 'src/infra/database/repositories/statement-r
 import { GetStatementsDTO } from 'src/interface/statement/dtos';
 
 describe('GetStatementsService', () => {
-  let getStatementsService: GetStatementsService, getAll: jest.Func;
+  let getStatementsService: GetStatementsService, findPaginated: jest.Func;
 
   const STATEMENTS = [
     {
@@ -16,9 +16,9 @@ describe('GetStatementsService', () => {
   ];
 
   beforeEach(async () => {
-    getAll = jest.fn((userId) =>
-      STATEMENTS.filter((user) => user.userId === userId),
-    );
+    findPaginated = jest.fn((where) => ({
+      items: STATEMENTS.filter((user) => user.userId === where.userId),
+    }));
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -26,7 +26,7 @@ describe('GetStatementsService', () => {
         {
           provide: StatementRepository,
           useValue: {
-            getAll,
+            findPaginated,
           },
         },
       ],
@@ -43,7 +43,7 @@ describe('GetStatementsService', () => {
 
     const response = await getStatementsService.execute(data);
 
-    expect(response.length).toBe(1);
-    expect(getAll).toHaveBeenCalledWith(data.userId);
+    expect(response.items.length).toBe(1);
+    expect(findPaginated).toHaveBeenCalled();
   });
 });

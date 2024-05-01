@@ -1,9 +1,18 @@
-import { Controller, Get, Inject, Req, Res, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Inject,
+  Query,
+  Req,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { ApiCookieAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { firstValueFrom } from 'rxjs';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { GetStatementRequestDTO } from './report.dto';
 
 @ApiTags('Report MS')
 @Controller()
@@ -18,9 +27,13 @@ export class ReportController {
   async getStatements(
     @Req() request: Request & { user: { id: string } },
     @Res({ passthrough: true }) response: Response,
+    @Query() query: GetStatementRequestDTO,
   ) {
     const { data, status, error } = await firstValueFrom(
-      this.client.send({ cmd: 'get_statements' }, { userId: request.user.id }),
+      this.client.send(
+        { cmd: 'get_statements' },
+        { userId: request.user.id, ...query },
+      ),
     );
 
     response.status(status);

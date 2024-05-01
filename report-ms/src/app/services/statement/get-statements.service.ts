@@ -1,5 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { StatementRepository } from 'src/infra/database/repositories/statement-repository';
+import {
+  PaginateWhere,
+  StatementRepository,
+} from 'src/infra/database/repositories/statement-repository';
 import { GetStatementsDTO } from 'src/interface/statement/dtos';
 
 @Injectable()
@@ -8,6 +11,19 @@ export class GetStatementsService {
   private readonly repository: StatementRepository;
 
   execute(payload: GetStatementsDTO) {
-    return this.repository.getAll(payload.userId);
+    const where: PaginateWhere = {
+      userId: payload.userId,
+      createdAt: {},
+    };
+
+    if (payload.startDate)
+      where.createdAt.gte = new Date(Date.parse(payload.startDate));
+    if (payload.endDate)
+      where.createdAt.lte = new Date(Date.parse(payload.endDate));
+
+    return this.repository.findPaginated(where, {
+      page: Number(payload.page),
+      perPage: Number(payload.perPage),
+    });
   }
 }
