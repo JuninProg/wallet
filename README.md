@@ -1,6 +1,6 @@
 # Digital Wallet
 
-## [:bulb:] About
+## :bulb: About
 
 A simple digital wallet designed to provide users with essential financial functionalities:
 
@@ -9,7 +9,7 @@ A simple digital wallet designed to provide users with essential financial funct
 * View user balance.
 * Generate reports resembling bank statements.
 
-## [:wrench:] Setup
+## :wrench: Setup
 
 To set up the application you must have **Docker** installed on your machine. For local configuration you must install **NodeJs** with version as described in `.nvmrc` file.
 
@@ -30,15 +30,15 @@ To set up the application you must have **Docker** installed on your machine. Fo
   - Go back to root folder
   - Run commands: `docker compose up -d auth_ms && docker compose up -d transaction_ms && docker compose up -d report_ms && docker compose up -d gateway`
 
-## [:pill:] Tests
+## :pill: Tests
 
 For testing is used **Jest** as suite to handle both unit and feature tests. To run a test go to a microservice folder and execute `npm test` or `npm run test:cov` to generate coverage details.
 
-## [:scroll:] Documentation
+## :scroll: Documentation
 
 All Rest API documentation can be found at `http://localhost:3000/docs`.
 
-## [:blue_book:] Architecture
+## :blue_book: Architecture
 
 The application is built using technologies to ensure robustness and scalability:
 
@@ -59,7 +59,7 @@ For microservice distribution we have:
 3. **Transaction MS**: responsible for handling transaction operation events and generate user balance.
 4. **Report MS**: responsible for handling bank statement reports.
 
-### [:money_with_wings:] Create Transaction Workflow
+### :money_with_wings: Create Transaction Workflow
 
 ![Create Transaction](docs/create-transaction.drawio.png)
 
@@ -69,11 +69,11 @@ Example payloads:
 `{"pattern":"transaction_requested","data":{"operation":"deposit","amount":2000,"originId":"1deb0188-36ce-43f3-ac71-c2c503c05c35","parentTransactionId":"1deb0188-36ce-43f3-ac71-c2c503c05c35","userId":"6f444465-5b5c-4e0a-a821-05d11ab01065"}}`
 * For HTTP: `{"operation":"deposit","amount":2000,"originId":"1deb0188-36ce-43f3-ac71-c2c503c05c35","parentTransactionId":"1deb0188-36ce-43f3-ac71-c2c503c05c35" }`
 
-### [:moneybag:] Get Balance Workflow
+### :moneybag: Get Balance Workflow
 
 ![Get Balance](docs/get-balance.drawio.png)
 
-### [:clipboard:] Create Statement Workflow
+### :clipboard: Create Statement Workflow
 
 ![Create Statement](docs/create-statement.drawio.png)
 
@@ -82,6 +82,6 @@ Example payloads:
 * For AMQP: 
 `{"pattern":"transaction_created","data":{"operation":"deposit","amount":2000,"transactionId":"1deb0188-36ce-43f3-ac71-c2c503c05c35","userId":"6f444465-5b5c-4e0a-a821-05d11ab01065"}}`
 
-### [:bar_chart:] Get Statement Workflow
+### :bar_chart: Get Statement Workflow
 
 ![Get Statement](docs/get-statement.drawio.png)
